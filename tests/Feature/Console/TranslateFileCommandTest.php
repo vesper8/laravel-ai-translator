@@ -1,6 +1,6 @@
 <?php
 
-use Laravel\Ai\Responses\Data\Usage;
+use Laravel\Ai\Responses\Data\TextUsage;
 
 use function Pest\Laravel\artisan;
 
@@ -18,7 +18,7 @@ test('uses the configured OpenRouter model when translating one file', function 
     fakeAiProvider([
         aiTextResponse(
             "<translations><item><key>{$key}</key><trx><![CDATA[안녕하세요]]></trx></item></translations>",
-            new Usage(10, 5),
+            new TextUsage(10, 5),
         ),
     ]);
     config()->set('ai-translator.ai.api_key', 'test-openrouter-key');

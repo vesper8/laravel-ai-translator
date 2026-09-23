@@ -3,7 +3,7 @@
 use Kargnas\LaravelAiTranslator\AI\AIProvider;
 use Kargnas\LaravelAiTranslator\Enums\TranslationStatus;
 use Laravel\Ai\Enums\Lab;
-use Laravel\Ai\Responses\Data\Usage;
+use Laravel\Ai\Responses\Data\TextUsage;
 
 test('environment variables are loaded from .env.testing', function () {
     $keys = collect(['OPENROUTER_API_KEY', 'OPENAI_API_KEY', 'ANTHROPIC_API_KEY', 'GEMINI_API_KEY'])
@@ -84,7 +84,7 @@ test('translates through the Laravel AI agent and aggregates usage', function ()
     fakeAiProvider([
         aiTextResponse(
             '<translations> <item> <key>test.greeting</key> <trx><![CDATA[안녕하세요]]></trx> </item> </translations>',
-            new Usage(12, 8, 0, 4),
+            new TextUsage(12, 8, cacheReadInputTokens: 4, cacheWriteInputTokens: 0),
         ),
     ]);
 

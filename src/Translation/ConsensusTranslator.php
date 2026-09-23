@@ -14,7 +14,7 @@ use Laravel\Ai\Contracts\HasProviderOptions;
 use Laravel\Ai\Contracts\HasStructuredOutput;
 use Laravel\Ai\Enums\Lab;
 use Laravel\Ai\Promptable;
-use Laravel\Ai\Responses\Data\Usage;
+use Laravel\Ai\Responses\Data\TextUsage;
 
 class ConsensusTranslator implements Translator
 {
@@ -177,7 +177,7 @@ class ConsensusTranslator implements Translator
 
         try {
             $response = $this->judge($candidates);
-            if ($response->usage instanceof Usage) {
+            if ($response->usage instanceof TextUsage) {
                 $this->addTokenUsageFromUsage($response->usage);
             }
             $this->emitTokenUsage(true);
@@ -350,12 +350,12 @@ class ConsensusTranslator implements Translator
             $this->tokenUsage['input_tokens'] + $this->tokenUsage['output_tokens'];
     }
 
-    protected function addTokenUsageFromUsage(Usage $usage): void
+    protected function addTokenUsageFromUsage(TextUsage $usage): void
     {
-        $this->tokenUsage['input_tokens'] += $usage->promptTokens;
-        $this->tokenUsage['output_tokens'] += $usage->completionTokens;
-        $this->tokenUsage['cache_creation_input_tokens'] += $usage->cacheWriteInputTokens;
-        $this->tokenUsage['cache_read_input_tokens'] += $usage->cacheReadInputTokens;
+        $this->tokenUsage['input_tokens'] += $usage->inputTokens;
+        $this->tokenUsage['output_tokens'] += $usage->outputTokens;
+        $this->tokenUsage['cache_creation_input_tokens'] += $usage->cacheWriteInputTokens ?? 0;
+        $this->tokenUsage['cache_read_input_tokens'] += $usage->cacheReadInputTokens ?? 0;
         $this->tokenUsage['total_tokens'] =
             $this->tokenUsage['input_tokens'] + $this->tokenUsage['output_tokens'];
     }

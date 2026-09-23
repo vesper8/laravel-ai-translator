@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Log;
 use Kargnas\LaravelAiTranslator\Exceptions\TranslationFailedException;
 use Kargnas\LaravelAiTranslator\Translation\ConsensusTranslator;
-use Laravel\Ai\Responses\Data\Usage;
+use Laravel\Ai\Responses\Data\TextUsage;
 use Laravel\Ai\Responses\TextResponse;
 
 function consensusTranslatorConfig(string $model): array
@@ -67,14 +67,14 @@ test('judge chooses a different candidate for one key', function () {
     fakeConsensusAgents([
         aiTextResponse(
             '<translations><item><key>test.greeting</key><trx><![CDATA[안녕하세요]]></trx></item><item><key>test.farewell</key><trx><![CDATA[잘 가]]></trx></item></translations>',
-            new Usage(10, 20),
+            new TextUsage(10, 20),
         ),
         aiTextResponse(
             '<translations><item><key>test.greeting</key><trx><![CDATA[안녕]]></trx></item><item><key>test.farewell</key><trx><![CDATA[안녕히 가세요]]></trx></item></translations>',
-            new Usage(11, 21),
+            new TextUsage(11, 21),
         ),
     ], [
-        aiStructuredResponse(['greeting' => 'A', 'farewell' => 'B'], new Usage(5, 7)),
+        aiStructuredResponse(['greeting' => 'A', 'farewell' => 'B'], new TextUsage(5, 7)),
     ]);
 
     $usage = [];

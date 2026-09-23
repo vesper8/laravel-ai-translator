@@ -18,7 +18,7 @@ use Laravel\Ai\Contracts\Agent;
 use Laravel\Ai\Contracts\HasProviderOptions;
 use Laravel\Ai\Enums\Lab;
 use Laravel\Ai\Promptable;
-use Laravel\Ai\Responses\Data\Usage;
+use Laravel\Ai\Responses\Data\TextUsage;
 use Laravel\Ai\Streaming\Events\ReasoningDelta;
 use Laravel\Ai\Streaming\Events\ReasoningEnd;
 use Laravel\Ai\Streaming\Events\ReasoningStart;
@@ -534,7 +534,7 @@ class AIProvider implements Translator
             }
         }
 
-        if ($lastUsage instanceof Usage) {
+        if ($lastUsage instanceof TextUsage) {
             $this->updateTokenUsage($lastUsage);
         }
 
@@ -702,14 +702,14 @@ class AIProvider implements Translator
         }
     }
 
-    protected function updateTokenUsage(Usage $usage): void
+    protected function updateTokenUsage(TextUsage $usage): void
     {
-        $this->cacheCreationInputTokens = $usage->cacheWriteInputTokens;
-        $this->cacheReadInputTokens = $usage->cacheReadInputTokens;
-        // OpenRouter includes cache reads in promptTokens but exposes cache writes separately,
-        // so subtract reads to keep input_tokens as freshly billed input only.
-        $this->inputTokens = max(0, $usage->promptTokens - $this->cacheReadInputTokens);
-        $this->outputTokens = $usage->completionTokens;
+        $this->cacheCreationInputTokens = $usage->cacheWriteInputTokens ?? 0;
+        $this->cacheReadInputTokens = $usage->cacheReadInputTokens ?? 0;
+        // Laravel AI 1.0 reports inclusive input tokens, so remove both cache
+        // subsets to keep input_tokens as freshly billed input only.
+        $this->inputTokens = $usage->uncachedInputTokens();
+        $this->outputTokens = $usage->outputTokens;
         $this->totalTokens = $this->inputTokens
             + $this->outputTokens
             + $this->cacheCreationInputTokens

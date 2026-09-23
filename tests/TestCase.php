@@ -39,18 +39,18 @@ namespace {
     use Laravel\Ai\Ai;
     use Laravel\Ai\Gateway\FakeTextGateway;
     use Laravel\Ai\Responses\Data\Meta;
-    use Laravel\Ai\Responses\Data\Usage;
+    use Laravel\Ai\Responses\Data\TextUsage;
     use Laravel\Ai\Responses\StructuredTextResponse;
     use Laravel\Ai\Responses\TextResponse;
 
-    function aiTextResponse(string $text, ?Usage $usage = null): TextResponse
+    function aiTextResponse(string $text, ?TextUsage $usage = null): TextResponse
     {
-        return new TextResponse($text, $usage ?? new Usage, new Meta('fake', 'fake'));
+        return new TextResponse($text, $usage ?? new TextUsage, new Meta('fake', 'fake'));
     }
 
-    function aiStructuredResponse(array $structured, ?Usage $usage = null): StructuredTextResponse
+    function aiStructuredResponse(array $structured, ?TextUsage $usage = null): StructuredTextResponse
     {
-        return new StructuredTextResponse($structured, json_encode($structured), $usage ?? new Usage, new Meta('fake', 'fake'));
+        return new StructuredTextResponse($structured, json_encode($structured), $usage ?? new TextUsage, new Meta('fake', 'fake'));
     }
 
     function aiProviderAgentClass(): string

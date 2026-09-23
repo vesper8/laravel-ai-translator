@@ -2,7 +2,7 @@
 
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Support\Facades\Http;
-use Laravel\Ai\Responses\Data\Usage;
+use Laravel\Ai\Responses\Data\TextUsage;
 
 use function Pest\Laravel\artisan;
 
@@ -28,7 +28,7 @@ test('extended thinking configures OpenRouter reasoning and direct Anthropic thi
     fakeAiProvider([
         aiTextResponse(
             '<translations><item><key>Test.test</key><trx><![CDATA[안녕하세요]]></trx></item></translations>',
-            new Usage(12, 8),
+            new TextUsage(12, 8),
         ),
     ]);
 
